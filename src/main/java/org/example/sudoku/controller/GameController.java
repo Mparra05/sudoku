@@ -2,6 +2,7 @@ package org.example.sudoku.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import org.example.sudoku.model.GridGame;
 
 public class GameController {
 
@@ -12,6 +13,10 @@ public class GameController {
 
     @FXML
     public void initialize() {
-        System.out.println("Bienvenido");
+        for (byte i = 0; i < 3; i++) {
+            for (byte j = 0; j < 3; j++) {
+                boardGame.add(new GridGame().getGridNumbers(), j, i);
+            }
+        }
     }
 }
