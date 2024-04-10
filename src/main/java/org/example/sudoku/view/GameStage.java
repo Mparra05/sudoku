@@ -14,7 +14,7 @@ public class GameStage extends Stage {
     private GameController gameController;
 
     public GameStage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/sudoku/game-view2.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/sudoku/game-view.fxml"));
         Parent root = loader.load();
         gameController = loader.getController();
         Scene scene = new Scene(root);
