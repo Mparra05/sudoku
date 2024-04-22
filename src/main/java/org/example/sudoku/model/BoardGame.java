@@ -13,7 +13,7 @@ public class BoardGame {
             }
         }
 
-        setDefaultNumbers();
+        //setDefaultNumbers();
     }
 
     public int[][] getBoardGame() {
