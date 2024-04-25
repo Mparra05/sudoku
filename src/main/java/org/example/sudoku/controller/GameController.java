@@ -2,13 +2,17 @@ package org.example.sudoku.controller;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.example.sudoku.model.BoardGame;
-import org.example.sudoku.model.GridGame;
+import javafx.event.EventHandler;
+import org.example.sudoku.view.alert.AlertBox;
 
 public class GameController {
 
@@ -43,8 +47,37 @@ public class GameController {
                     numberField.setEditable(false);
                 }
 
+                setOnKeyTyped(numberField, i, j);
                 gridGame.add(numberField, j, i);
             }
         }
+    }
+
+    public void setOnKeyTyped(TextField textField, int row, int column) {
+        textField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                int digitTyped = keyEvent.getCharacter().charAt(0);
+
+                if (!textField.getText().isEmpty()) textField.setText(textField.getText(0, 1));
+
+                if (!Character.isDigit(digitTyped)) textField.setText(null);
+
+                if (!boardGame.validateNumberRow(digitTyped, row, column)
+                    && !boardGame.validateNumberColumn(digitTyped, column, row)
+                    && !boardGame.validateNumberGrid(digitTyped, boardGame.getInitialRowOrColumnIndex(row),
+                                                        boardGame.getFinalRowOrColumnIndex(row),
+                                                        boardGame.getInitialRowOrColumnIndex(column),
+                                                        boardGame.getFinalRowOrColumnIndex(column))) {
+
+                    boardGame.setBoardGame(keyEvent.getCharacter().charAt(0), row, column);
+                }
+                else {
+                    new AlertBox().showAlertMessage("Entrada Invalida", "Numero Incorrecto", "No puedes usar este número", Alert.AlertType.ERROR);
+                    textField.setText(null);
+                }
+            }
+        });
     }
 }

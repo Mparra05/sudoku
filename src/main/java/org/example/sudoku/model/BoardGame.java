@@ -20,6 +20,10 @@ public class BoardGame {
         return this.boardGame;
     }
 
+    public void setBoardGame(int number, int row, int column) {
+        boardGame[row][column] = number;
+    }
+
     public void setDefaultNumbers() {
         for (int i = 0; i < 9; i++) {
             int defaultNumbers = 4;
@@ -102,17 +106,6 @@ public class BoardGame {
                     System.out.println("Prueba");
                 }
 
-                /*if (!(validateNumberGrid(randomNumber, initialRow, finalRow, initialColumn, finalColumn))) {
-                    System.out.println(validateNumberGrid(randomNumber, initialRow, finalRow, initialColumn, finalColumn));
-                }
-                if (!(validateNumberRow(randomNumber, randomRow, randomColumn))) {
-                    //System.out.println(validateNumberRow(randomNumber, randomRow, randomColumn));
-                }
-                if (!(validateNumberColumn(randomNumber, randomColumn, randomRow))) {
-                    //System.out.println(validateNumberColumn(randomNumber, randomColumn, randomRow));
-                }
-
-                defaultNumbers--;*/
             }
         }
     }
@@ -147,5 +140,25 @@ public class BoardGame {
         }
 
         return validatedColumn;
+    }
+
+    public int getInitialRowOrColumnIndex(int index) {
+        int initialRowOrColumnIndex;
+
+        if (index == 0 || index == 1 || index == 2) initialRowOrColumnIndex = 0;
+        else if (index == 3 || index == 4 || index == 5) initialRowOrColumnIndex = 3;
+        else initialRowOrColumnIndex = 6;
+
+        return initialRowOrColumnIndex;
+    }
+
+    public int getFinalRowOrColumnIndex(int index) {
+        int finalRowOrColumnIndex;
+
+        if (index == 0 || index == 1 || index == 2) finalRowOrColumnIndex = 2;
+        else if (index == 3 || index == 4 || index == 5) finalRowOrColumnIndex = 5;
+        else finalRowOrColumnIndex = 8;
+
+        return finalRowOrColumnIndex;
     }
 }
