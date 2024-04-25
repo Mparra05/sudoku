@@ -13,7 +13,7 @@ public class BoardGame {
             }
         }
 
-        //setDefaultNumbers();
+        setDefaultNumbers();
     }
 
     public int[][] getBoardGame() {
@@ -27,20 +27,26 @@ public class BoardGame {
     public void setDefaultNumbers() {
         for (int i = 0; i < 9; i++) {
             int defaultNumbers = 4;
-            int randomRow = 0, randomColumn = 0, initialRow = 0, finalRow = 0, initialColumn = 0, finalColumn = 0;
-            int randomNumber = (int) (Math.random() * 8) + 1;
 
             while (defaultNumbers > 0) {
+                int randomRow = 0, randomColumn = 0;
+                int initialRow = 0, finalRow = 0;
+                int initialColumn = 0, finalColumn = 0;
+                int randomNumber = (int) (Math.random() * 8) + 1;
+
                 switch (i) {
                     case 0:
                         randomRow = (int) (Math.random() * 2);
                         randomColumn = (int) (Math.random() * 2);
+                        initialRow = 0;
                         finalRow = 2;
+                        finalColumn = 0;
                         finalColumn = 2;
                         break;
                     case 1:
                         randomRow = (int) (Math.random() * 2);
                         randomColumn = (int) (Math.random() * 2) + 3;
+                        initialRow = 0;
                         finalRow = 2;
                         initialColumn = 3;
                         finalColumn = 5;
@@ -48,6 +54,7 @@ public class BoardGame {
                     case 2:
                         randomRow = (int) (Math.random() * 2);
                         randomColumn = (int) (Math.random() * 2) + 6;
+                        initialRow = 0;
                         finalRow = 2;
                         initialColumn = 6;
                         finalColumn = 8;
@@ -57,6 +64,7 @@ public class BoardGame {
                         randomColumn = (int) (Math.random() * 2);
                         initialRow = 3;
                         finalRow = 5;
+                        initialColumn = 0;
                         finalColumn = 2;
                         break;
                     case 4:
@@ -80,6 +88,7 @@ public class BoardGame {
                         randomColumn = (int) (Math.random() * 2);
                         initialRow = 6;
                         finalRow = 8;
+                        initialColumn = 0;
                         finalColumn = 2;
                         break;
                     case 7:
@@ -100,10 +109,13 @@ public class BoardGame {
                         break;
                 }
 
-                if (!(validateNumberGrid(randomNumber, initialRow, finalRow, initialColumn, finalColumn)) && !(validateNumberRow(randomNumber, randomRow, randomColumn)) && !(validateNumberColumn(randomNumber, randomColumn, randomRow))) {
+                if (!(validateNumberGrid(randomNumber, initialRow, finalRow, initialColumn, finalColumn))
+                        && !(validateNumberRow(randomNumber, randomRow, randomColumn))
+                        && !(validateNumberColumn(randomNumber, randomColumn, randomRow))
+                        && !isIndexEmpty(randomRow, randomColumn)) {
+
                     this.boardGame[randomRow][randomColumn] = randomNumber;
                     defaultNumbers--;
-                    System.out.println("Prueba");
                 }
 
             }
@@ -160,5 +172,13 @@ public class BoardGame {
         else finalRowOrColumnIndex = 8;
 
         return finalRowOrColumnIndex;
+    }
+
+    public boolean isIndexEmpty(int row, int column) {
+        boolean indexEmpty = false;
+
+        if (this.boardGame[row][column] != 0) indexEmpty = true;
+
+        return indexEmpty;
     }
 }
