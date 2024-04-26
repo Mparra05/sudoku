@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.example.sudoku.model.BoardGame;
 import javafx.event.EventHandler;
+import org.example.sudoku.view.GameStage;
 import org.example.sudoku.view.alert.AlertBox;
 
 public class GameController {
@@ -58,11 +59,11 @@ public class GameController {
 
             @Override
             public void handle(KeyEvent keyEvent) {
-                int digitTyped = keyEvent.getCharacter().charAt(0);
+                int digitTyped = Integer.parseInt(keyEvent.getCharacter());
 
                 if (!textField.getText().isEmpty()) textField.setText(textField.getText(0, 1));
 
-                if (!Character.isDigit(digitTyped)) textField.setText(null);
+                if (!Character.isDigit(keyEvent.getCharacter().charAt(0))) textField.setText(null);
 
                 if (!boardGame.validateNumberRow(digitTyped, row, column)
                     && !boardGame.validateNumberColumn(digitTyped, column, row)
@@ -71,13 +72,22 @@ public class GameController {
                                                         boardGame.getInitialRowOrColumnIndex(column),
                                                         boardGame.getFinalRowOrColumnIndex(column))) {
 
-                    boardGame.setBoardGame(keyEvent.getCharacter().charAt(0), row, column);
+                    boardGame.setBoardGame(digitTyped, row, column);
                 }
                 else {
                     new AlertBox().showAlertMessage("Entrada Invalida", "Numero Incorrecto", "No puedes usar este número", Alert.AlertType.ERROR);
                     textField.setText(null);
                 }
+
+                winGame(boardGame.validateBoardComplete());
             }
         });
+    }
+
+    public void winGame(boolean validatedBoardComplete) {
+        if (validatedBoardComplete) {
+            new AlertBox().showAlertMessage("Juego Completado", "Has ganado", "Felicitaciones has completado el tablero del Sudoku", Alert.AlertType.INFORMATION);
+            GameStage.deleteInstance();
+        }
     }
 }
