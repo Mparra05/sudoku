@@ -25,20 +25,25 @@ public class GameController {
     @FXML
     public void initialize() {
         boardGame = new BoardGame();
-
+        //Método que se llama cuando se inicializa el controlador.
+        //Se encarga de inicializar el modelo del juego y configurar la interfaz de usuario.
+        // Inicializa el modelo del juego Sudoku
         for (int i = 0; i < 9; i++) {
             for (int  j = 0; j < 9; j++) {
                 TextField numberField = new TextField();
                 numberField.setPrefSize(44, 44);
                 numberField.setAlignment(Pos.CENTER);
                 numberField.setFont(Font.font("System", FontWeight.BOLD, 16));
+                // Crea y configura los TextField para cada celda de la cuadrícula de números
 
                 if ((i==j && (i==2 || i==5 ||i==8)) || (i==2 && j==5) || (i==2 && j==8) || (i==5 && j==2) || (i==5 && j==8) || (i==8 && j==2) || (i==8 && j==5)) {
                     numberField.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 2, 2, 0))));
                 }
+                // Configura el borde de los TextField para resaltar los bloques del Sudoku
                 else if (i==2 || i==5 || i==8) {
                     numberField.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 0, 2, 0))));
                 }
+                // Si el número en la celda es mayor que 0, lo establece en el TextField y lo hace no editable
                 else if (j==2 || j==5 || j==8) {
                     numberField.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0, 2, 0, 0))));
                 }
@@ -50,15 +55,18 @@ public class GameController {
 
                 setOnKeyTyped(numberField, i, j);
                 gridGame.add(numberField, j, i);
+                // Configura el evento para manejar la entrada del usuario en cada celda
             }
         }
     }
 
     public void setOnKeyTyped(TextField textField, int row, int column) {
+        //Setters de los keyevents
         textField.setOnKeyTyped(new EventHandler<KeyEvent>() {
 
             @Override
             public void handle(KeyEvent keyEvent) {
+                // Implementación para manejar la entrada del usuario
                 int digitTyped = Integer.parseInt(keyEvent.getCharacter());
 
                 if (!textField.getText().isEmpty()) textField.setText(textField.getText(0, 1));
@@ -73,6 +81,7 @@ public class GameController {
                                                         boardGame.getFinalRowOrColumnIndex(column))) {
 
                     boardGame.setBoardGame(digitTyped, row, column);
+                    // Condicionales para el BoardGame icluyendo Final y initial row y columns
                 }
                 else {
                     new AlertBox().showAlertMessage("Entrada Invalida", "Numero Incorrecto", "No puedes usar este número", Alert.AlertType.ERROR);
@@ -88,6 +97,8 @@ public class GameController {
         if (validatedBoardComplete) {
             new AlertBox().showAlertMessage("Juego Completado", "Has ganado", "Felicitaciones has completado el tablero del Sudoku", Alert.AlertType.INFORMATION);
             GameStage.deleteInstance();
+            // Implementación para verificar si se ha completado el juego y mostrar un mensaje de felicitaciones
         }
     }
 }
+
