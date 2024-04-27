@@ -1,9 +1,18 @@
 package org.example.sudoku.model;
 
-public class BoardGame {
+/**
+ * Class representing a sudoku board
+ */
+public class BoardGame implements IBoardGame {
 
+    /**
+     * The board game
+     */
     private final int[][] boardGame;
 
+    /**
+     * Example of a board game almost complete to test the win method faster
+     */
     /*private final int[][] boardGame = new int[][] {
             {5, 3, 4, 6, 7, 8, 9, 1, 2},
             {6, 7, 2, 1, 9, 5, 3, 4, 8},
@@ -16,6 +25,10 @@ public class BoardGame {
             {3, 4, 5, 2, 8, 6, 1, 7, 0},
     };*/
 
+    /**
+     * Class constructor initialize the board game
+     * @see #setDefaultNumbers()
+     */
     public BoardGame() {
         boardGame = new int[9][9];
 
@@ -28,14 +41,44 @@ public class BoardGame {
         setDefaultNumbers();
     }
 
+    /**
+     * Gets the board game
+     * @return The board game
+     */
+    @Override
     public int[][] getBoardGame() {
         return this.boardGame;
     }
 
-    public void setBoardGame(int number, int row, int column) {
+    /**
+     * Sets the number typed on the board game
+     * @param number Number typed
+     * @param row Row of the field typed
+     * @param column Column of the field typed
+     */
+    @Override
+    public void setNumberBoardGame(int number, int row, int column) {
         boardGame[row][column] = number;
     }
 
+    /**
+     * Removes a number of the board game
+     * @param row Row f the field to remove
+     * @param column Column of the field to remove
+     */
+    @Override
+    public void removeNumberBoardGame(int row, int column) {
+        boardGame[row][column] = 0;
+    }
+
+    /**
+     * Sets the default numbers on the board game
+     * @see #validateNumberGrid(int, int, int, int, int, int, int)
+     * @see #validateNumberRow(int, int, int)
+     * @see #validateNumberColumn(int, int, int)
+     * @see #isIndexEmpty(int, int)
+     */
+    @Override
     public void setDefaultNumbers() {
         for (int i = 0; i < 9; i++) {
             int defaultNumbers = 4;
@@ -121,7 +164,7 @@ public class BoardGame {
                         break;
                 }
 
-                if (!(validateNumberGrid(randomNumber, initialRow, finalRow, initialColumn, finalColumn))
+                if (!(validateNumberGrid(randomNumber, randomRow, randomColumn, initialRow, finalRow, initialColumn, finalColumn))
                         && !(validateNumberRow(randomNumber, randomRow, randomColumn))
                         && !(validateNumberColumn(randomNumber, randomColumn, randomRow))
                         && !isIndexEmpty(randomRow, randomColumn)) {
@@ -133,18 +176,38 @@ public class BoardGame {
         }
     }
 
-    public boolean validateNumberGrid(int number, int initialRow, int finalRow, int initialColumn, int finalColumn) {
+    /**
+     * Validates if the number typed is already used on the same grid
+     * @param number Number typed
+     * @param row Row of the field typed
+     * @param column Column of the field typed
+     * @param initialRow First row of the grid
+     * @param finalRow Last row of the grid
+     * @param initialColumn First column of the grid
+     * @param finalColumn Last column of the grid
+     * @return If the number typed is already used on the same grid or not
+     */
+    @Override
+    public boolean validateNumberGrid(int number, int row, int column, int initialRow, int finalRow, int initialColumn, int finalColumn) {
         boolean validatedGrid = false;
 
         for (int i = initialRow; i <= finalRow; i++) {
             for (int j = initialColumn; j <= finalColumn; j++) {
-                if (this.boardGame[i][j] == number) validatedGrid = true;
+                if (this.boardGame[i][j] == number && i != row && j != column) validatedGrid = true;
             }
         }
 
         return validatedGrid;
     }
 
+    /**
+     * Validates if the number typed is already used on the same row of the board game
+     * @param number Number typed
+     * @param row Row of the field typed
+     * @param columnIndexNumber Column of the field typed
+     * @return If the number typed is already used on the same row of the board game or not
+     */
+    @Override
     public boolean validateNumberRow(int number, int row, int columnIndexNumber) {
         boolean validatedRow = false;
 
@@ -155,6 +218,14 @@ public class BoardGame {
         return validatedRow;
     }
 
+    /**
+     * Validates if the number typed is already used on the same column of the board game
+     * @param number Number typed
+     * @param column Column of the field typed
+     * @param rowIndexNumber Row of the field typed
+     * @return If the number typed is already used on the same column of the board game or not
+     */
+    @Override
     public boolean validateNumberColumn(int number, int column, int rowIndexNumber) {
         boolean validatedColumn = false;
 
@@ -165,6 +236,12 @@ public class BoardGame {
         return validatedColumn;
     }
 
+    /**
+     * Gets the first row or column of the grid where a specific field is located
+     * @param index Index of the row or column of the specific field
+     * @return The index first row or column of the grid
+     */
+    @Override
     public int getInitialRowOrColumnIndex(int index) {
         int initialRowOrColumnIndex;
 
@@ -175,6 +252,12 @@ public class BoardGame {
         return initialRowOrColumnIndex;
     }
 
+    /**
+     * Gets the last row or column of the grid where a specific field is located
+     * @param index Index of the row or column of the specific field
+     * @return The index last row or column of the grid
+     */
+    @Override
     public int getFinalRowOrColumnIndex(int index) {
         int finalRowOrColumnIndex;
 
@@ -185,6 +268,13 @@ public class BoardGame {
         return finalRowOrColumnIndex;
     }
 
+    /**
+     * Validates if a field of the board game is empty
+     * @param row Row of the field
+     * @param column Column of the field
+     * @return If the field of the board game is empty or not
+     */
+    @Override
     public boolean isIndexEmpty(int row, int column) {
         boolean indexEmpty = false;
 
@@ -193,6 +283,10 @@ public class BoardGame {
         return indexEmpty;
     }
 
+    /**
+     * Shows the current numbers of the board game in the shell to make testing
+     */
+    @Override
     public void printBoardGame() {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -205,6 +299,11 @@ public class BoardGame {
         System.out.println();
     }
 
+    /**
+     * Validates if the board game is already complete
+     * @return If the board game is already complete or not
+     */
+    @Override
     public boolean validateBoardComplete() {
         boolean validatedBoardComplete = true;
 

@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -15,13 +14,26 @@ import javafx.event.EventHandler;
 import org.example.sudoku.view.GameStage;
 import org.example.sudoku.view.alert.AlertBox;
 
+/**
+ * Class of the game controller
+ */
 public class GameController {
 
+    /**
+     * Instance of the BoardGame class
+     */
     private BoardGame boardGame;
 
+    /**
+     * FXML GridPane of the GUI
+     */
     @FXML
     private GridPane gridGame;
 
+    /**
+     * Initialize the game controller and show the application
+     * @see #setOnKeyTyped(TextField, int, int)
+     */
     @FXML
     public void initialize() {
         boardGame = new BoardGame();
@@ -54,29 +66,47 @@ public class GameController {
         }
     }
 
+    /**
+     * Sets the key event to the fields of the board game to start playing
+     * @param textField Text fields of the board game
+     * @param row Text field row
+     * @param column Text field column
+     * @see #winGame(boolean)
+     */
     public void setOnKeyTyped(TextField textField, int row, int column) {
         textField.setOnKeyTyped(new EventHandler<KeyEvent>() {
 
             @Override
             public void handle(KeyEvent keyEvent) {
-                int digitTyped = Integer.parseInt(keyEvent.getCharacter());
 
-                if (!textField.getText().isEmpty()) textField.setText(textField.getText(0, 1));
-
-                if (!Character.isDigit(keyEvent.getCharacter().charAt(0))) textField.setText(null);
-
-                if (!boardGame.validateNumberRow(digitTyped, row, column)
-                    && !boardGame.validateNumberColumn(digitTyped, column, row)
-                    && !boardGame.validateNumberGrid(digitTyped, boardGame.getInitialRowOrColumnIndex(row),
-                                                        boardGame.getFinalRowOrColumnIndex(row),
-                                                        boardGame.getInitialRowOrColumnIndex(column),
-                                                        boardGame.getFinalRowOrColumnIndex(column))) {
-
-                    boardGame.setBoardGame(digitTyped, row, column);
+                if (!Character.isDigit(keyEvent.getCharacter().charAt(0))) {
+                    if(textField.getText().length() == 1) {
+                        textField.setText(null);
+                        boardGame.removeNumberBoardGame(row,column);
+                    }
+                    else {
+                        textField.setText(null);
+                        boardGame.removeNumberBoardGame(row,column);
+                    }
                 }
                 else {
-                    new AlertBox().showAlertMessage("Entrada Invalida", "Numero Incorrecto", "No puedes usar este número", Alert.AlertType.ERROR);
-                    textField.setText(null);
+                    int digitTyped = Integer.parseInt(keyEvent.getCharacter());
+                    textField.setText(textField.getText(0, 1));
+
+                    if (!boardGame.validateNumberRow(digitTyped, row, column)
+                            && !boardGame.validateNumberColumn(digitTyped, column, row)
+                            && !boardGame.validateNumberGrid(digitTyped, row, column, boardGame.getInitialRowOrColumnIndex(row),
+                            boardGame.getFinalRowOrColumnIndex(row),
+                            boardGame.getInitialRowOrColumnIndex(column),
+                            boardGame.getFinalRowOrColumnIndex(column))) {
+
+                        boardGame.setNumberBoardGame(digitTyped, row, column);
+                    }
+                    else {
+                        new AlertBox().showAlertMessage("Error", "Entrada Invalida!!", "No puedes usar este número en esta casilla.", Alert.AlertType.ERROR);
+                        textField.setText(null);
+                        boardGame.removeNumberBoardGame(row,column);
+                    }
                 }
 
                 winGame(boardGame.validateBoardComplete());
@@ -84,9 +114,13 @@ public class GameController {
         });
     }
 
+    /**
+     * Shows a message to the winner and close the application
+     * @param validatedBoardComplete Status of the board game
+     */
     public void winGame(boolean validatedBoardComplete) {
         if (validatedBoardComplete) {
-            new AlertBox().showAlertMessage("Juego Completado", "Has ganado", "Felicitaciones has completado el tablero del Sudoku", Alert.AlertType.INFORMATION);
+            new AlertBox().showAlertMessage("Juego Completado", "Has ganado!", "Felicitaciones has completado el tablero del Sudoku!!!", Alert.AlertType.INFORMATION);
             GameStage.deleteInstance();
         }
     }
